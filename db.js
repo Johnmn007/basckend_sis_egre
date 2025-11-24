@@ -11,17 +11,40 @@ const RolModel = require("./models/Roles");
 const PermisosModel = require("./models/Permisos");
 const SeguimientoLaboralModel = require("./models/SeguimientoLaboral");
 
-// 📌 Configuración de conexión a la base de datos
-const DB_USER = "postgres";
-const DB_PASSWORD = "john.007";
-const DB_HOST = "localhost"; 
-const DB_PORT = "5432";
-const DB_NAME = "sistema_egresados_titulados";
 
-const database = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
-  { logging: false }
-);
+// ===========================================
+// 🔹 CONFIGURACIÓN PARA RAILWAY
+// ===========================================
+
+// 📌 TU URL (Railway) — debe venir desde Variable de entorno
+// DATABASE_URL = "postgresql://postgres:AwzjjEKwrxLelAagJedxGjkoGPtHGxBY@postgres.railway.internal:5432/railway"
+
+const database = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: false // 🚫 NO usar SSL en railway.internal
+    }
+  }
+});
+
+
+
+
+
+// 📌 Configuración de conexión a la base de datos
+// const DB_USER = "postgres";
+// const DB_PASSWORD = "john.007";
+// const DB_HOST = "localhost"; 
+// const DB_PORT = "5432";
+// const DB_NAME = "sistema_egresados_titulados";
+
+// const database = new Sequelize(
+//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+//   { logging: false }
+// );
 
 // 📌 Crear instancias de los modelos
 const Student = StudentModel(database);
