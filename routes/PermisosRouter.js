@@ -28,7 +28,8 @@ permisosRouter.get("/",async(req,res)=>{
         res.status(400).json({error: error.message})
     }
 })
-permisosRouter.get("/:id",verifyToken, async (req, res) => {
+// permisosRouter.get("/:id",verifyToken, async (req, res) => {
+permisosRouter.get("/:id", async (req, res) => {
     try {
         const { id } = req.params; // Obtener el ID de los parámetros de la URL
         const rol = await getPermisosById(id); // Pasar el ID a la función
@@ -43,7 +44,8 @@ permisosRouter.get("/:id",verifyToken, async (req, res) => {
     }
 });
 
-permisosRouter.put("/:id",verifyToken,async(req,res)=>{
+// permisosRouter.put("/:id",verifyToken,async(req,res)=>{
+permisosRouter.put("/:id",async(req,res)=>{
     const {id}=req.params
     const {idRol,insertPer,updatePer,deletePer}=req.body;
     try {
