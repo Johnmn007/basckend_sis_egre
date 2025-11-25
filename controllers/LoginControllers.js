@@ -1,5 +1,5 @@
 const { Login } = require("../db");
-const  bcrypt  =  require ( 'bcrypt' ) ; 
+const  bcrypt  =  require ( 'bcryptjs' ) ; 
 
 
 const createLogin = async (idRol, usuario, contraseña, responsable) => {
