@@ -19,19 +19,33 @@ const SeguimientoLaboralModel = require("./models/SeguimientoLaboral");
 // 📌 TU URL (Railway) — debe venir desde Variable de entorno
 // DATABASE_URL = "postgresql://postgres:AwzjjEKwrxLelAagJedxGjkoGPtHGxBY@postgres.railway.internal:5432/railway"
 
+// const database = new Sequelize(process.env.DATABASE_URL, {
+//   dialect: "postgres",
+//   protocol: "postgres",
+//   logging: false,
+//   dialectOptions: {
+//     ssl: {
+//       require: false // 🚫 NO usar SSL en railway.internal
+//     }
+//   }
+// });
+
+
 const database = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
-  protocol: "postgres",
   logging: false,
   dialectOptions: {
-    ssl: {
-      require: false // 🚫 NO usar SSL en railway.internal
-    }
+    ssl: process.env.NODE_ENV === 'production' ? {
+      require: true,
+      rejectUnauthorized: false
+    } : false
   }
 });
 
-
-
+// Verificar conexión
+database.authenticate()
+  .then(() => console.log('✅ Conectado a la base de datos'))
+  .catch(err => console.error('❌ Error de conexión:', err));
 
 
 
@@ -102,4 +116,18 @@ module.exports = {
   Permisos,
   SeguimientoLaboral,
   Modalidad
+};
+
+
+// ----------------------logs--------------
+const getRol = async () => {
+  try {
+    console.log("🔍 Intentando obtener roles...");
+    const roles = await Rol.findAll();
+    console.log("✅ Roles obtenidos:", roles.length);
+    return roles;
+  } catch (error) {
+    console.error("❌ Error en getRol:", error);
+    throw error;
+  }
 };
