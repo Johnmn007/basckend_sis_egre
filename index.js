@@ -1,11 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const multer = require("multer");
 const { database } = require("./db");
 
+// Routers
 const ubigeoRouter = require("./routes/ubigeoRouter");
-
 const studentRouter = require("./routes/studentRouter");
 const tecProfessionalRouter = require("./routes/tecProfessionalRouter");
 const StudentEgresadosRouter = require("./routes/StudentGraduateRouter");
@@ -15,9 +14,7 @@ const PermisosRouter = require("./routes/PermisosRouter");
 const seguimientoRouter = require("./routes/SeguimientoRouter");
 const rolRouter = require("./routes/RolRouter");
 const ModalidadRouter = require("./routes/ModalidadRouter");
-
 const ListRouter = require("./routes/ListEgresados/List");
-
 const CountStudent = require("./routes/Count/CountRouter");
 
 const server = express();
@@ -41,14 +38,10 @@ server.use("/Modalidad", ModalidadRouter);
 server.use("/List", ListRouter);
 server.use("/countStudent", CountStudent);
 
-// 🚀 Puerto dinámico para Railway
+// Puerto dinámico
 const PORT = process.env.PORT || 3001;
 
-// Sincronización y arranque
-database.sync()
-    .then(() => {
-        server.listen(PORT, () => {
-            console.log("Servidor escuchando en el puerto " + PORT);
-        });
-    })
-    .catch(err => console.log("Error al sincronizar la base de datos:", err.message));
+// 🚀 ARRANQUE RÁPIDO SIN authenticate() NI sync()
+server.listen(PORT, () => {
+    console.log("🚀 Servidor escuchando en el puerto " + PORT);
+});

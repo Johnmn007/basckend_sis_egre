@@ -34,17 +34,7 @@ const database = new Sequelize(process.env.DATABASE_URL, {
 
 
 
-// 📌 Configuración de conexión a la base de datos
-// const DB_USER = "postgres";
-// const DB_PASSWORD = "john.007";
-// const DB_HOST = "localhost"; 
-// const DB_PORT = "5432";
-// const DB_NAME = "sistema_egresados_titulados";
 
-// const database = new Sequelize(
-//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
-//   { logging: false }
-// );
 
 // 📌 Crear instancias de los modelos
 const Student = StudentModel(database);
@@ -100,20 +90,6 @@ StudentTitulado.belongsTo(Modalidad, { foreignKey: "idModalidad", as: "modalidad
 StudentTitulado.belongsTo(TecProfessional, { as: "profession", foreignKey: "idProfessional" });
 TecProfessional.hasMany(StudentTitulado, { as: "titulados", foreignKey: "idProfessional" });
 
-
-// =======================================================
-// 🔹 Verificar conexión
-// =======================================================
-(async () => {
-  try {
-    await database.authenticate();
-    console.log("✅ Conexión exitosa a la base de datos.");
-    await database.sync({ alter: true });
-    console.log("✅ Modelos sincronizados correctamente.");
-  } catch (error) {
-    console.error("❌ Error al conectar la base de datos:", error);
-  }
-})();
 
 module.exports = {
   database,
