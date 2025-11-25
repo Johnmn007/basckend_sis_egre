@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const multer = require('multer');
+const multer = require("multer");
 const { database } = require("./db");
 
 const ubigeoRouter = require("./routes/ubigeoRouter");
@@ -19,21 +19,16 @@ const ModalidadRouter = require("./routes/ModalidadRouter");
 const ListRouter = require("./routes/ListEgresados/List");
 
 const CountStudent = require("./routes/Count/CountRouter");
-//const uploadRouter = require("./routes/uploadRouter");
 
 const server = express();
 
+// Middlewares
 server.use(morgan("dev"));
 server.use(express.json());
 server.use(cors());
 
-//server.use('/uploads', express.static('uploads'));
-
-
 // Rutas
 server.use("/ubigeo", ubigeoRouter);
-
-
 server.use("/Student", studentRouter);
 server.use("/tecProfessional", tecProfessionalRouter);
 server.use("/StudentGraduate", StudentEgresadosRouter);
@@ -43,15 +38,13 @@ server.use("/Permisos", PermisosRouter);
 server.use("/Rol", rolRouter);
 server.use("/SeguimientoLaboral", seguimientoRouter);
 server.use("/Modalidad", ModalidadRouter);
-
 server.use("/List", ListRouter);
-
 server.use("/countStudent", CountStudent);
 
+// 🚀 Puerto dinámico para Railway
+const PORT = process.env.PORT || 3001;
 
-// Sincronización de la base de datos
-
-
+// Sincronización y arranque
 database.sync()
     .then(() => {
         server.listen(PORT, () => {
