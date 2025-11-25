@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const upload = require("../middlewares/upload"); // Importar Multer
-const {verifyToken} = require("../middlewares/verifyToken");
+// const {verifyToken} = require("../middlewares/verifyToken"); // ← COMENTADO
 const multer = require('multer');
 
 const {
@@ -17,7 +17,7 @@ const {
 
 const studentRouter = Router();
 
-studentRouter.post("/upload",verifyToken, upload.single("photo"), async (req, res) => {
+studentRouter.post("/upload", upload.single("photo"), async (req, res) => {  // ← QUITADO verifyToken
     try {
         if (!req.file) {
             return res.status(400).json({ error: "No se subió ninguna imagen" });
@@ -29,8 +29,9 @@ studentRouter.post("/upload",verifyToken, upload.single("photo"), async (req, re
         res.status(500).json({ error: error.message });
     }
 });
+
 // Crear un nuevo estudiante
-studentRouter.post("/",verifyToken, async (req, res) => {
+studentRouter.post("/", async (req, res) => {  // ← QUITADO verifyToken
     try {
         const { firstName, lastName, gender, age, email, dni,address,celular,observacion, photo,id_departamento,id_Provincia,id_distrito } = req.body;
         const newStudent = await createStudent(firstName, lastName, gender, age, email, dni,address,celular,observacion, photo,id_departamento,id_Provincia,id_distrito);
@@ -41,7 +42,7 @@ studentRouter.post("/",verifyToken, async (req, res) => {
 });
 
 // Obtener todos los estudiantes o filtrados por query params
-studentRouter.get("/",verifyToken, async (req, res) => {
+studentRouter.get("/", async (req, res) => {  // ← QUITADO verifyToken
     try {
         const { dni, lastName, gender } = req.query;
 
@@ -63,7 +64,7 @@ studentRouter.get("/",verifyToken, async (req, res) => {
     }
 });
 
-studentRouter.get("/detalleView/:id",verifyToken, async (req, res) => {
+studentRouter.get("/detalleView/:id", async (req, res) => {  // ← QUITADO verifyToken
     try {
         const {  id } = req.params;
         let student;
@@ -81,7 +82,8 @@ studentRouter.get("/detalleView/:id",verifyToken, async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-studentRouter.get("/detalleViewTitle/:id",verifyToken, async (req, res) => {
+
+studentRouter.get("/detalleViewTitle/:id", async (req, res) => {  // ← QUITADO verifyToken
     try {
         const {  id } = req.params;
         let student;
@@ -101,7 +103,7 @@ studentRouter.get("/detalleViewTitle/:id",verifyToken, async (req, res) => {
 });
 
 // Obtener un estudiante por ID
-studentRouter.get("/:id",verifyToken, async (req, res) => {
+studentRouter.get("/:id", async (req, res) => {  // ← QUITADO verifyToken
     try {
         const { id } = req.params;
         const student = await getidStudents(id);
@@ -137,10 +139,6 @@ studentRouter.delete("/:id", async (req, res) => {
     }
 });
 
-
-
 studentRouter.put("/:id/photo", upload.single("photo"), updateStudentPhoto);
-
-
 
 module.exports = studentRouter;
