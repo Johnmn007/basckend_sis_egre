@@ -6,46 +6,47 @@ const {
     updatePermisos,
     deletePermisos
 }=require("../controllers/PermisosControllers");
-const { emit } = require("nodemon");
-const permisosRouter=Router();
 
 const {verifyToken} = require("../middlewares/verifyToken");
+const permisosRouter=Router();
 
+// RUTAS PÚBLICAS (sin verifyToken)
 permisosRouter.post("/",async(req,res)=>{
     const {idRol,insertPer,updatePer,deletePer}=req.body;
     try {
         const newPermisos=await createPermisos(idRol,insertPer,updatePer,deletePer);
-            res.status(200).json(newPermisos,);
+        res.status(200).json(newPermisos);
     } catch (error) {
         res.status(400).json({error:error.message});       
     }
 });
-permisosRouter.get("/",async(req,res)=>{
+
+// RUTAS PROTEGIDAS (con verifyToken)
+permisosRouter.get("/", verifyToken, async(req,res)=>{
     try {
         let rol = await getPermisos();
         res.status(200).json(rol)
     } catch (error) {
         res.status(400).json({error: error.message})
     }
-})
-// permisosRouter.get("/:id",verifyToken, async (req, res) => {
-permisosRouter.get("/:id", async (req, res) => {
-    try {
-        const { id } = req.params; // Obtener el ID de los parámetros de la URL
-        const rol = await getPermisosById(id); // Pasar el ID a la función
+});
 
-        if (!rol) {
-            return res.status(404).json({ error: "Profesional no encontrado" });
+permisosRouter.get("/:id", verifyToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const permisos = await getPermisosById(id);
+
+        if (!permisos) {
+            return res.status(404).json({ error: "Permiso no encontrado" });
         }
 
-        res.status(200).json(professional);
+        res.status(200).json(permisos); // ← CORREGIDO: era "professional", debe ser "permisos"
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// permisosRouter.put("/:id",verifyToken,async(req,res)=>{
-permisosRouter.put("/:id",async(req,res)=>{
+permisosRouter.put("/:id", verifyToken, async(req,res)=>{
     const {id}=req.params
     const {idRol,insertPer,updatePer,deletePer}=req.body;
     try {
@@ -54,18 +55,16 @@ permisosRouter.put("/:id",async(req,res)=>{
     } catch (error) {
         res.status(400).json({error: error.message})
     }
-})
+});
 
-permisosRouter.delete('/:id',async(req,res)=>{
+permisosRouter.delete('/:id', verifyToken, async(req,res)=>{
     const {id}=req.params
     try {
         await deletePermisos(id);
-        res.status(200).json("Departaento eliminado")
+        res.status(200).json("Permiso eliminado")
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 });
 
-
-
-module.exports = permisosRouter
+module.exports = permisosRouter;
