@@ -54,8 +54,8 @@ server.use("/countStudent", CountStudent);
 
 database.sync()
     .then(() => {
-        server.listen(3001, () => {
-            console.log("Servidor escuchando en el puerto 3001");
+        server.listen(PORT, () => {
+            console.log("Servidor escuchando en el puerto " + PORT);
         });
     })
     .catch(err => console.log("Error al sincronizar la base de datos:", err.message));
