@@ -29,6 +29,18 @@ const SeguimientoLaboralModel = require("./models/SeguimientoLaboral");
 //     }
 //   }
 // });
+// --------------------------------------------------------------
+const testConnection = async () => {
+  try {
+    const roles = await Rol.findAll();
+    console.log("Roles en Neon:", roles.map(r => r.nombre));
+  } catch(err) {
+    console.error(err);
+  }
+};
+
+testConnection();
+// ----------------------------------------------------------
 
 
 const database = new Sequelize(process.env.DATABASE_URL, {
