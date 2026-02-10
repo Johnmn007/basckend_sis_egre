@@ -72,14 +72,33 @@ const deleteLogin = async (id) => {
   return { message: "Login eliminado correctamente" };
 };
 
-
-
 const validateLogin = async (usuario, contraseña) => {
-  const hashedPassword =  crypto.createHash('sha256').update(contraseña).digest('hex');
-  const user = await Login.create({ where: { usuario: usuario}} );
-  if (!user) throw new Error("Datos Incorrectos");
-  return user;
+  const user = await Login.findOne({ where: { usuario } });
+
+  if (!user) throw new Error("Usuario no encontrado");
+
+  const validPassword = await bcrypt.compare(
+    contraseña,
+    user.contraseña
+  );
+
+  if (!validPassword) throw new Error("Contraseña incorrecta");
+
+  return {
+    id: user.id,
+    usuario: user.usuario,
+    idRol: user.idRol,
+    responsable: user.responsable
+  };
 };
+
+
+// const validateLogin = async (usuario, contraseña) => {
+//   const hashedPassword =  crypto.createHash('sha256').update(contraseña).digest('hex');
+//   const user = await Login.create({ where: { usuario: usuario}} );
+//   if (!user) throw new Error("Datos Incorrectos");
+//   return user;
+// };
 
 module.exports = {
   createLogin,
